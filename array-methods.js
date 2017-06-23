@@ -1,3 +1,4 @@
+/* jshint esversion: 6 */
 var dataset = require('./dataset.json');
 
 /*
@@ -5,7 +6,13 @@ var dataset = require('./dataset.json');
   greater than 100000
   assign the resulting new array to `hundredThousandairs`
 */
-var hundredThousandairs = null;
+
+
+var hundredThousandairs = dataset.bankBalances.filter( function (number) {
+  return number.amount > 100000;
+
+});
+
 
 /*
   DO NOT MUTATE DATA.
@@ -24,7 +31,13 @@ var hundredThousandairs = null;
     }
   assign the resulting new array to `datasetWithRoundedDollar`
 */
-var datasetWithRoundedDollar = null;
+var datasetWithRoundedDollar = dataset.bankBalances.map( function ( number ) {
+  return {
+
+    "rounded": Math.round(number.amount)
+  }
+
+});
 
 /*
   DO NOT MUTATE DATA.
@@ -49,10 +62,24 @@ var datasetWithRoundedDollar = null;
     }
   assign the resulting new array to `roundedDime`
 */
-var datasetWithRoundedDime = null;
+var datasetWithRoundedDime = dataset.bankBalances.map( function ( number ) {
+  return {
+
+    "amount": number.amount,
+    "roundedDime": Math.round( number.amount * 10 ) / 10
+
+  }
+
+});
 
 // set sumOfBankBalances to be the sum of all value held at `amount` for each bank object
-var sumOfBankBalances = null;
+var sumOfBankBalances = dataset.bankBalances.reduce(getSum, 0)
+
+function getSum ( initialVal, total, number) {
+  sum = initialVal + parseFloat(total.amount)
+  return Math.round(sum * 100) / 100
+}
+
 
 /*
   from each of the following states:
