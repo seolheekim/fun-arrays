@@ -1,5 +1,5 @@
 /* jshint esversion: 6 */
-var dataset = require('./dataset.json');
+var dataset = require('./dataset.json')
 
 /*
   create an array with accounts from bankBalances that are
@@ -8,10 +8,12 @@ var dataset = require('./dataset.json');
 */
 
 
-var hundredThousandairs = dataset.bankBalances.filter( function (number) {
-  return number.amount > 100000;
+var hundredThousandairs = dataset.bankBalances.filter( greaterThanThousand );
 
-});
+function greaterThanThousand( number ){
+  var array = parseFloat(number.amount);
+  return array > 100000;
+}
 
 
 /*
@@ -31,13 +33,14 @@ var hundredThousandairs = dataset.bankBalances.filter( function (number) {
     }
   assign the resulting new array to `datasetWithRoundedDollar`
 */
-var datasetWithRoundedDollar = dataset.bankBalances.map( function ( number ) {
+var datasetWithRoundedDollar = dataset.bankBalances.map( roundedKey );
+
+function roundedKey( number ){
   return {
 
     "rounded": Math.round(number.amount)
   }
-
-});
+}
 
 /*
   DO NOT MUTATE DATA.
@@ -62,37 +65,49 @@ var datasetWithRoundedDollar = dataset.bankBalances.map( function ( number ) {
     }
   assign the resulting new array to `roundedDime`
 */
-var datasetWithRoundedDime = dataset.bankBalances.map( function ( number ) {
+var datasetWithRoundedDime = dataset.bankBalances.map( roundedDimeKey )
+
+function roundedDimeKey( number ){
   return {
 
     "amount": number.amount,
     "roundedDime": Math.round( number.amount * 10 ) / 10
 
   }
-
-});
+}
 
 // set sumOfBankBalances to be the sum of all value held at `amount` for each bank object
 var sumOfBankBalances = dataset.bankBalances.reduce(getSum, 0)
 
-function getSum ( initialVal, total, number) {
-  sum = initialVal + parseFloat(total.amount)
+function getSum ( initialVal, number ) {
+  sum = initialVal + parseFloat(number.amount)
   return Math.round(sum * 100) / 100
 }
 
-
 /*
   from each of the following states:
-    Wisconsin
-    Illinois
-    Wyoming
-    Ohio
-    Georgia
-    Delaware
+    Wisconsin WI
+    Illinois IL
+    Wyoming WY
+    Ohio Oh
+    Georgia GA
+    Delaware DE
   take each `amount` and add 18.9% interest to it rounded to the nearest cent
   and then sum it all up into one value saved to `sumOfInterests`
  */
-var sumOfInterests = null;
+ //
+
+var sumOfInterests = dataset.bankBalances.filter( findTheStateKeys ).reduce( addInterest, 0 )
+
+function findTheStateKeys ( key ) {
+  return key.state === "WI" || key.state === "IL" || key.state === "WY" || key.state === "OH" || key.state === "GA" || key.state === "DE"
+}
+
+function addInterest ( initialVal, number ) {
+  sum = initialVal + parseFloat(number.amount) * 0.189
+  return Math.round(sum * 100) / 100
+
+}
 
 /*
   aggregate the sum of bankBalance amounts
