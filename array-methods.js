@@ -125,7 +125,21 @@ function addInterest ( initialVal, number ) {
     round this number to the nearest 10th of a cent before moving on.
   )
  */
-var stateSums = null;
+
+var stateSums = dataset.bankBalances.reduce( addStates ,{})
+
+function addStates( getState, stateAccount){
+  if( !getState.hasOwnProperty(stateAccount.state )){
+    getState[stateAccount.state] = 0
+  }
+  getState[stateAccount.state] += Math.round(stateAccount.amount * 100) / 100
+  getState[stateAccount.state] = parseFloat(getState[stateAccount.state].toFixed(2))
+  return getState
+}
+
+
+
+
 
 /*
   from each of the following states:
